@@ -46,8 +46,9 @@ int circular_list_delte(listType* list, int pos) {
 			for (index = 1; index < list->length; index++) {
 				pptr = pptr->link;
 			}
-			list->head = nptr->link; //list->head->link 와 같은 표현
 			pptr->link = list->head->link;
+			list->head = nptr->link; //list->head->link 와 같은 표현
+			
 		}
 
 	}
