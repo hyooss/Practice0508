@@ -12,6 +12,63 @@ typedef struct listType {
 	struct node* head;  // 첫 번째 노드를 가리키는 포인터
 } listType;
 
+int circular_list_delte(listType* list, int pos) {
+
+	node* nptr = NULL; //삭제 노드
+	node* pptr = NULL; //삭제 이전 노드
+	int index;
+	int delitem;
+
+	//리스트 비어있는 경우
+	if (list->length == 0) { //list->head == NULL
+		printf("List is Empty!!\n");
+		return -1;
+	}
+
+	//잘못된 위치를 지정한 경우
+	if (pos<1 || pos>list->length) {
+		printf("Position out of range\n");
+		return -1;
+	}
+
+	// 첫번째 노드를 삭제하는 경우
+	if (pos == 1) {
+		nptr = list->head;
+
+		//노드가 1개뿐인 경우
+		if (nptr==nptr->link) { //list->length == 1
+			list->head = NULL;
+		}
+		//노드가 2개 이상인 경우
+		else {
+			// pptr은 마지막 노드로 이동
+			pptr = list->head;
+			for (index = 1; index < list->length; index++) {
+				pptr = pptr->link;
+			}
+			list->head = nptr->link; //list->head->link 와 같은 표현
+			pptr->link = list->head->link;
+		}
+
+	}
+
+	// 중간의 노드를 삭제하는 경우
+	// pos가 2 이상인 경우
+	else {
+		// 삭제 노드로 nptr 이동
+		nptr = list->head;
+		for (int index = 1; index < pos; index++) {
+			pptr = nptr; //이동하기 전에 이전 포인터를 지정
+			nptr = nptr->link;
+		}
+		pptr->link = nptr->link;
+	}
+	delitem = nptr->data;
+	free(nptr);
+	list->length--;
+	return delitem;
+}
+
 void circular_list_insert(listType* list, int pos, int item)
 {
 	node* newNode = NULL;
@@ -151,7 +208,7 @@ void circular_list_menu(listType* list)
 			// 비어있는지 검사
 			printf("Delete Position ? ");
 			scanf_s("%d", &pos);
-			//delitem = circular_list_delete(list, pos);
+			delitem = circular_list_delete(list, pos);
 			if (delitem > 0) {
 				printf("Delete Item : %d\n", delitem);
 			}
